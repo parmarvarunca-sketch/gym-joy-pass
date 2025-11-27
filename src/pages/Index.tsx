@@ -105,7 +105,7 @@ const Index = () => {
             <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg group">
               <iframe
                 className="w-full h-full"
-                src="https://www.youtube.com/embed/pHUXmPagSlY"
+                src="https://www.youtube.com/embed/4BOTvaRaDjI"
                 title="Gym Tour Video 1"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -114,7 +114,7 @@ const Index = () => {
             <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg group">
               <iframe
                 className="w-full h-full"
-                src="https://www.youtube.com/embed/ml6cT4AZdqI"
+                src="https://www.youtube.com/embed/3bZlMXkH9Ak"
                 title="Gym Tour Video 2"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -123,7 +123,7 @@ const Index = () => {
             <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg group">
               <iframe
                 className="w-full h-full"
-                src="https://www.youtube.com/embed/bbNA17KjBzU"
+                src="https://www.youtube.com/embed/VIhP7qtKxD4"
                 title="Gym Tour Video 3"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -132,7 +132,7 @@ const Index = () => {
             <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg group">
               <iframe
                 className="w-full h-full"
-                src="https://www.youtube.com/embed/R26lfDRH0V4"
+                src="https://www.youtube.com/embed/7kbSfFFRsVM"
                 title="Gym Tour Video 4"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
