@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Dumbbell, Zap, Users, Award } from "lucide-react";
+import { Dumbbell, Zap, Users, Award, Play } from "lucide-react";
 
 const Index = () => {
   return (
@@ -72,6 +72,76 @@ const Index = () => {
                 Choose from multiple membership options that fit your lifestyle
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Video Gallery Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
+              <Play className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-primary">Tour Our Facility</span>
+            </div>
+            <h2 className="mb-4 text-4xl font-bold text-foreground">
+              Experience Our Gym
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+              Take a virtual tour of our state-of-the-art facilities and see what makes us different
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto mb-8">
+            <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg group">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/4BOTvaRaDjI"
+                title="Gym Tour Video 1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg group">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/3bZlMXkH9Ak"
+                title="Gym Tour Video 2"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg group">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/VIhP7qtKxD4"
+                title="Gym Tour Video 3"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg group">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/7kbSfFFRsVM"
+                title="Gym Tour Video 4"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/auth">
+              <Button size="lg" className="w-full sm:w-auto">
+                Get Started
+              </Button>
+            </Link>
+            <Link to="/plans">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                View Plans
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
