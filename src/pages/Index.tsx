@@ -31,6 +31,15 @@ const Index = () => {
                   Get Started
                 </Button>
               </Link>
+              <Button 
+                size="lg" 
+                variant="secondary" 
+                className="w-full sm:w-auto"
+                onClick={() => document.getElementById('video-gallery')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                <Play className="mr-2 h-4 w-4" />
+                Watch Tour
+              </Button>
               <Link to="/plans">
                 <Button size="lg" variant="outline" className="w-full sm:w-auto">
                   View Plans
@@ -77,7 +86,7 @@ const Index = () => {
       </section>
 
       {/* Video Gallery Section */}
-      <section className="py-20">
+      <section id="video-gallery" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
