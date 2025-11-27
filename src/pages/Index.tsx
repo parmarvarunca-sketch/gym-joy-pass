@@ -31,7 +31,7 @@ const Index = () => {
                   Get Started
                 </Button>
               </Link>
-              <Link to="/dashboard">
+              <Link to="/plans">
                 <Button size="lg" variant="outline" className="w-full sm:w-auto">
                   View Plans
                 </Button>
