@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Dumbbell } from "lucide-react";
+import { Dumbbell, ArrowLeft } from "lucide-react";
 import { User, Session } from "@supabase/supabase-js";
 
 const Auth = () => {
@@ -126,7 +126,16 @@ const Auth = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4">
-      <Card className="w-full max-w-md">
+      <div className="w-full max-w-md space-y-4">
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/")}
+          className="group"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Back to Home
+        </Button>
+        <Card className="w-full">
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
@@ -256,7 +265,8 @@ const Auth = () => {
             </div>
           </div>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 };
