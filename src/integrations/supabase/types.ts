@@ -47,6 +47,48 @@ export type Database = {
         }
         Relationships: []
       }
+      progress_logs: {
+        Row: {
+          body_fat_percentage: number | null
+          chest_cm: number | null
+          created_at: string
+          height_cm: number | null
+          hips_cm: number | null
+          id: string
+          logged_at: string
+          notes: string | null
+          user_id: string
+          waist_cm: number | null
+          weight_kg: number | null
+        }
+        Insert: {
+          body_fat_percentage?: number | null
+          chest_cm?: number | null
+          created_at?: string
+          height_cm?: number | null
+          hips_cm?: number | null
+          id?: string
+          logged_at?: string
+          notes?: string | null
+          user_id: string
+          waist_cm?: number | null
+          weight_kg?: number | null
+        }
+        Update: {
+          body_fat_percentage?: number | null
+          chest_cm?: number | null
+          created_at?: string
+          height_cm?: number | null
+          hips_cm?: number | null
+          id?: string
+          logged_at?: string
+          notes?: string | null
+          user_id?: string
+          waist_cm?: number | null
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
       subscription_plans: {
         Row: {
           created_at: string
@@ -117,6 +159,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      workout_notes: {
+        Row: {
+          content: string | null
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
