@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { User, Session } from "@supabase/supabase-js";
-import { Loader2, UserCircle } from "lucide-react";
+import { Loader2, UserCircle, ArrowLeft } from "lucide-react";
 import { SubscriptionPlans } from "@/components/SubscriptionPlans";
 import { CurrentPlan } from "@/components/CurrentPlan";
 import { DailyTip } from "@/components/DailyTip";
