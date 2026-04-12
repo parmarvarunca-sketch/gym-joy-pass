@@ -4,21 +4,25 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Loader2, ShieldAlert, Users } from "lucide-react";
 import { toast } from "sonner";
 
-interface SignupLog {
+interface UserRow {
   id: string;
+  user_id: string;
   user_email: string | null;
   display_name: string | null;
   signed_up_at: string;
+  plan_name: string | null;
+  plan_active: boolean;
 }
 
 const Admin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [signups, setSignups] = useState<SignupLog[]>([]);
+  const [users, setUsers] = useState<UserRow[]>([]);
 
   useEffect(() => {
     const checkAdminAndLoad = async () => {
@@ -28,7 +32,6 @@ const Admin = () => {
         return;
       }
 
-      // Check admin role
       const { data: roles } = await supabase
         .from("user_roles")
         .select("role")
@@ -43,18 +46,47 @@ const Admin = () => {
 
       setIsAdmin(true);
 
-      // Fetch signup logs
-      const { data, error } = await supabase
-        .from("signup_logs")
-        .select("*")
-        .order("signed_up_at", { ascending: false });
+      // Fetch signup logs and subscriptions in parallel
+      const [signupsRes, subsRes] = await Promise.all([
+        supabase.from("signup_logs").select("*").order("signed_up_at", { ascending: false }),
+        supabase.from("user_subscriptions").select("user_id, is_active, subscription_plans(name)"),
+      ]);
 
-      if (error) {
+      if (signupsRes.error) {
         toast.error("Failed to load signup data");
-      } else {
-        setSignups(data || []);
+        setLoading(false);
+        return;
       }
 
+      // Build a map of user_id -> subscription info
+      const subMap = new Map<string, { plan_name: string; is_active: boolean }>();
+      if (subsRes.data) {
+        for (const sub of subsRes.data) {
+          const plan = sub.subscription_plans as any;
+          // Keep the most recent / active one
+          if (!subMap.has(sub.user_id) || sub.is_active) {
+            subMap.set(sub.user_id, {
+              plan_name: plan?.name || "Unknown",
+              is_active: sub.is_active ?? false,
+            });
+          }
+        }
+      }
+
+      const merged: UserRow[] = (signupsRes.data || []).map((log) => {
+        const sub = subMap.get(log.user_id);
+        return {
+          id: log.id,
+          user_id: log.user_id,
+          user_email: log.user_email,
+          display_name: log.display_name,
+          signed_up_at: log.signed_up_at,
+          plan_name: sub?.plan_name || null,
+          plan_active: sub?.is_active ?? false,
+        };
+      });
+
+      setUsers(merged);
       setLoading(false);
     };
 
@@ -109,43 +141,55 @@ const Admin = () => {
               <div>
                 <CardTitle>Registered Users</CardTitle>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Total: {signups.length} user{signups.length !== 1 ? "s" : ""}
+                  Total: {users.length} user{users.length !== 1 ? "s" : ""}
                 </p>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            {signups.length === 0 ? (
+            {users.length === 0 ? (
               <p className="text-center text-muted-foreground py-8">No signups yet.</p>
             ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>#</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Signed Up</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {signups.map((log, i) => (
-                    <TableRow key={log.id}>
-                      <TableCell className="font-medium">{i + 1}</TableCell>
-                      <TableCell>{log.display_name || "—"}</TableCell>
-                      <TableCell>{log.user_email || "—"}</TableCell>
-                      <TableCell>
-                        {new Date(log.signed_up_at).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </TableCell>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>#</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Membership</TableHead>
+                      <TableHead>Signed Up</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user, i) => (
+                      <TableRow key={user.id}>
+                        <TableCell className="font-medium">{i + 1}</TableCell>
+                        <TableCell>{user.display_name || "—"}</TableCell>
+                        <TableCell>{user.user_email || "—"}</TableCell>
+                        <TableCell>
+                          {user.plan_name ? (
+                            <Badge variant={user.plan_active ? "default" : "secondary"}>
+                              {user.plan_name} {user.plan_active ? "(Active)" : "(Expired)"}
+                            </Badge>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">No plan</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {new Date(user.signed_up_at).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             )}
           </CardContent>
         </Card>
