@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { User, Session } from "@supabase/supabase-js";
-import { Loader2, UserCircle } from "lucide-react";
+import { Loader2, UserCircle, ArrowLeft } from "lucide-react";
 import { SubscriptionPlans } from "@/components/SubscriptionPlans";
 import { CurrentPlan } from "@/components/CurrentPlan";
 import { DailyTip } from "@/components/DailyTip";
@@ -56,7 +56,12 @@ const Dashboard = () => {
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/50 backdrop-blur">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <h1 className="text-2xl font-bold text-foreground">FitLife Gym</h1>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h1 className="text-2xl font-bold text-foreground">FitLife Gym</h1>
+          </div>
           <div className="flex items-center gap-2">
             <span className="hidden text-sm text-muted-foreground sm:inline">{user.email}</span>
             <ThemeSwitcher />
