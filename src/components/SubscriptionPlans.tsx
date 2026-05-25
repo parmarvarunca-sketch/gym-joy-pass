@@ -46,30 +46,8 @@ export const SubscriptionPlans = ({ userId }: SubscriptionPlansProps) => {
     setLoading(false);
   };
 
-  const handleSubscribe = async (planId: string, durationMonths: number) => {
-    const endDate = new Date();
-    endDate.setMonth(endDate.getMonth() + durationMonths);
-
-    const { error } = await supabase
-      .from("user_subscriptions")
-      .insert({
-        user_id: userId,
-        plan_id: planId,
-        end_date: endDate.toISOString(),
-        is_active: true,
-      });
-
-    if (error) {
-      if (error.code === "23505") {
-        toast.error("You already have an active subscription");
-      } else {
-        toast.error("Error subscribing to plan");
-      }
-      console.error(error);
-    } else {
-      toast.success("Successfully subscribed! Your plan is now active.");
-      setTimeout(() => window.location.reload(), 1500);
-    }
+  const handleSubscribe = async (_planId: string, _durationMonths: number) => {
+    toast.info("Checkout coming soon. Subscriptions must be created via secure payment flow.");
   };
 
   if (loading) {
