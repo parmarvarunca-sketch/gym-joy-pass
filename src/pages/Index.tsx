@@ -1,10 +1,122 @@
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Dumbbell, Zap, Users, Award, Play } from "lucide-react";
+import { Dumbbell, Zap, Users, Award, Play, MoreVertical, LayoutDashboard, User, LogIn, LogOut, ShieldCheck } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setSignedIn(!!session);
+      if (session) {
+        const { data: roles } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .eq("role", "admin");
+        setIsAdmin(!!roles && roles.length > 0);
+      }
+    };
+    checkAuth();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => checkAuth());
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const close = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, []);
+
+  const handleSignOut = async () => {
+    setMenuOpen(false);
+    await supabase.auth.signOut();
+    navigate("/");
+  };
+
+  const menuItemClass = "flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors text-left";
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Floating three-dot menu */}
+      <div ref={menuRef} className="fixed top-4 right-4 z-50">
+        <Button
+          size="icon"
+          variant="secondary"
+          className="rounded-full shadow-lg"
+          aria-label="Open menu"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <MoreVertical className="h-5 w-5" />
+        </Button>
+        {menuOpen && (
+          <div className="absolute right-0 mt-2 w-56 rounded-xl border border-border bg-popover p-1.5 shadow-xl">
+            {signedIn ? (
+              <>
+                <button
+                  className={menuItemClass}
+                  onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
+                >
+                  <LayoutDashboard className="h-4 w-4 text-primary" />
+                  Dashboard
+                </button>
+                <button
+                  className={menuItemClass}
+                  onClick={() => { setMenuOpen(false); navigate("/profile"); }}
+                >
+                  <User className="h-4 w-4 text-primary" />
+                  Profile
+                </button>
+                {isAdmin && (
+                  <button
+                    className={menuItemClass}
+                    onClick={() => { setMenuOpen(false); navigate("/admin"); }}
+                  >
+                    <ShieldCheck className="h-4 w-4 text-accent" />
+                    Admin Panel
+                  </button>
+                )}
+                <button
+                  className={menuItemClass}
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="h-4 w-4 text-destructive" />
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className={menuItemClass}
+                  onClick={() => { setMenuOpen(false); navigate("/auth"); }}
+                >
+                  <LogIn className="h-4 w-4 text-primary" />
+                  Sign In / Sign Up
+                </button>
+                <button
+                  className={menuItemClass}
+                  onClick={() => { setMenuOpen(false); navigate("/plans"); }}
+                >
+                  <Award className="h-4 w-4 text-primary" />
+                  View Plans
+                </button>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/5" />
